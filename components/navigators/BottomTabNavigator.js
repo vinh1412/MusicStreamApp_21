@@ -1,13 +1,23 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/AudioListingScreen'; // Đường dẫn thay đổi theo cấu trúc thư mục của bạn
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from '../screens/AudioListingScreen';
 import SearchScreen from '../screens/AudioListingScreen';
 import FeedScreen from '../screens/AudioListingScreen';
 import LibraryScreen from '../screens/AudioListingScreen';
+import PlaylistDetailScreen from '../screens/PlaylistDetailScreen';
 import { Image, Text } from 'react-native';
 
 const Tab = createBottomTabNavigator();
-
+const Stack = createNativeStackNavigator();
+const AudioStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="AudioListing" component={HomeScreen} />
+      <Stack.Screen name="PlaylistDetailScreen" component={PlaylistDetailScreen} />
+    </Stack.Navigator>
+  );
+};
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
@@ -39,7 +49,7 @@ const BottomTabNavigator = () => {
         tabBarStyle: { height: 100, paddingBottom: 20, paddingTop: 20 },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen}/>
+      <Tab.Screen name="Home" component={AudioStackNavigator}/>
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Feed" component={FeedScreen} />
       <Tab.Screen name="Library" component={LibraryScreen} />
