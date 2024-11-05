@@ -14,7 +14,7 @@ const LaunchScreen = () => {
       <View style={styles.container}>
         {/* Logo */}
         <Image
-          source={require('../../assets/images/launchScreen/logo.png')}
+          source={require('../../assets/icons/logoWhite.png')}
           style={styles.logo}
         />
 
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 70,
     height: 70,
-    marginTop:100
+    marginTop:80
   },
   textContainer: {
     alignItems: 'center',
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   createAccountButton: {
-    marginTop: 50,
+    marginTop: 60,
     backgroundColor: '#000',
     paddingVertical: 15,
     paddingHorizontal: 100,
