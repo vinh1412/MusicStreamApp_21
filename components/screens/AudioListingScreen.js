@@ -68,7 +68,7 @@ const artistData = [
     name: "Alice Smith",
   },
 ];
-const AudioListingScreen = () => {
+const AudioListingScreen = ({navigation}) => {
   const handlePress = (item) => {
     Alert.alert("Button Pressed", `You clicked`);
   };
@@ -141,7 +141,7 @@ const AudioListingScreen = () => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() => handlePress(item)}
+                onPress={() => navigation.navigate('PlaylistDetailScreen') }
                 style={styles.chartCard}
               >
                 <Image source={item.image} style={styles.chartImage} />
@@ -195,7 +195,7 @@ const AudioListingScreen = () => {
                 style={styles.artistCard}
                 onPress={() => handlePress(item)}
               >
-                <Image source={item.image} style={styles.artistImage} />
+                <Image source={item.image}/>
                 <Text style={styles.artistName}>{item.name}</Text>
                 <TouchableOpacity
                   style={styles.followButton}
@@ -336,11 +336,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
     alignItems: "center",
-  },
-  artistImage: {
-    width: "100%",
-    height: 150,
-    borderRadius: 110,
   },
   artistName: {
     marginTop: 5,
