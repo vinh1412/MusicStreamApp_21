@@ -12,8 +12,7 @@ import {
   Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-const { width } = Dimensions.get("screen");
-
+const { width, height } = Dimensions.get("screen");
 const chartData = [
   {
     id: "1",
@@ -68,7 +67,7 @@ const artistData = [
     name: "Alice Smith",
   },
 ];
-const AudioListingScreen = ({navigation}) => {
+const AudioListingScreen = ({ navigation }) => {
   const handlePress = (item) => {
     Alert.alert("Button Pressed", `You clicked`);
   };
@@ -141,7 +140,7 @@ const AudioListingScreen = ({navigation}) => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() => navigation.navigate('PlaylistDetailScreen') }
+                onPress={() => navigation.navigate("PlaylistDetailScreen")}
                 style={styles.chartCard}
               >
                 <Image source={item.image} style={styles.chartImage} />
@@ -195,7 +194,7 @@ const AudioListingScreen = ({navigation}) => {
                 style={styles.artistCard}
                 onPress={() => handlePress(item)}
               >
-                <Image source={item.image}/>
+                <Image source={item.image} />
                 <Text style={styles.artistName}>{item.name}</Text>
                 <TouchableOpacity
                   style={styles.followButton}

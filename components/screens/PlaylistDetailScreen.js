@@ -141,7 +141,7 @@ export default function PlaylistDetailScreen({ navigation, route }) {
       />
 
       {/* Now Playing Section */}
-      <View style={styles.nowPlaying}>
+      <TouchableOpacity style={styles.nowPlaying} onPress={() => navigation.navigate('PlayAnAudioScreen')}>
         <Image
           source={require("../../assets/images/playlistDetailScreen/songImageActive.png")}
         />
@@ -155,7 +155,7 @@ export default function PlaylistDetailScreen({ navigation, route }) {
         </View>
         <Icon1 name="hearto" size={20} color="#fff" style={{paddingHorizontal:30}} />
         <Icon4 name="play" size={20} color="#fff" />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
