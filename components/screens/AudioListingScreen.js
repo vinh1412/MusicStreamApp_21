@@ -192,7 +192,7 @@ const AudioListingScreen = ({ navigation }) => {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.artistCard}
-                onPress={() => handlePress(item)}
+                onPress={() => navigation.navigate("ArtistProfileScreen")}
               >
                 <Image source={item.image} />
                 <Text style={styles.artistName}>{item.name}</Text>

@@ -6,6 +6,7 @@ import SearchScreen from "../screens/AudioListingScreen";
 import FeedScreen from "../screens/AudioListingScreen";
 import LibraryScreen from "../screens/AudioListingScreen";
 import PlaylistDetailScreen from "../screens/PlaylistDetailScreen";
+import ArtistProfileScreen from "../screens/ArtistProfileScreen";
 
 import { Image, Text } from "react-native";
 
@@ -14,10 +15,17 @@ const Stack = createNativeStackNavigator();
 const AudioStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="AudioListing" component={HomeScreen} />
+      <Stack.Screen name="AudioListingScreen" component={HomeScreen} />
       <Stack.Screen
         name="PlaylistDetailScreen"
         component={PlaylistDetailScreen}
+        options={{
+          animation: "slide_from_right",
+        }}
+      />
+      <Stack.Screen
+        name="ArtistProfileScreen"
+        component={ArtistProfileScreen}
         options={{
           animation: "slide_from_right",
         }}
