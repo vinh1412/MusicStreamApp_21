@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Dimensions,
   FlatList,
   Alert,
+  Modal,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("screen");
@@ -67,9 +68,17 @@ const artistData = [
     name: "Alice Smith",
   },
 ];
-const AudioListingScreen = ({ navigation }) => {
+const AudioListingScreen = ({ navigation, route }) => {
+  const { userName } = route.params;
   const handlePress = (item) => {
     Alert.alert("Button Pressed", `You clicked`);
+  };
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleLogout = () => {
+    console.log("User logged out");
+    navigation.navigate("LoginScreen");
+    setModalVisible(false);
   };
   return (
     <View style={styles.container}>
@@ -81,16 +90,47 @@ const AudioListingScreen = ({ navigation }) => {
         />
         <View style={styles.subHeader}>
           <Icon name="bell-o" size={25} color="#8B95A6" style={styles.notice} />
-          <Image
-            source={require("../../assets/icons/userIcon.png")}
-            style={styles.profileImage}
-          />
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={styles.userIconContainer}
+          >
+            <Image
+              source={require("../../assets/icons/userIcon.png")}
+              style={styles.profileImage}
+            />
+          </TouchableOpacity>
+
+          {/* Modal to display the small table below */}
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={styles.modalBackground}>
+              <View style={styles.modalContent}>
+                <TouchableOpacity
+                  onPress={handleLogout}
+                  style={styles.logoutButton}
+                >
+                  <Text style={styles.logoutText}>Logout</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(false)}
+                  style={styles.cancelButton}
+                >
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
       </View>
+
       {/* Welcome Bar */}
       <View style={styles.textHeader}>
         <Text style={styles.greeting}>Good morning,</Text>
-        <Text style={styles.username}>Ashley Scott</Text>
+        <Text style={styles.username}>{userName}</Text>
       </View>
       {/* Search Bar */}
       <View style={styles.searchContainer}>
@@ -251,6 +291,44 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     marginLeft: "auto",
+  },
+  userIconContainer: {
+    position: "relative",
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    paddingTop: 45,
+  },
+  modalContent: {
+    width: 60,
+    padding: 5,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+    marginRight: 10,
+  },
+  logoutButton: {
+    padding: 5,
+    backgroundColor: "#FF4D4D",
+    borderRadius: 5,
+    marginBottom: 5,
+  },
+  logoutText: {
+    color: "#fff",
+    fontSize: 12,
+  },
+  cancelButton: {
+    padding: 5,
+    backgroundColor: "#8B95A6",
+    borderRadius: 5,
+  },
+  cancelText: {
+    color: "#fff",
+    fontSize: 12,
   },
   searchContainer: {
     flexDirection: "row",
