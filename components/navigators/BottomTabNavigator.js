@@ -78,7 +78,7 @@ const BottomTabNavigator = ({ route }) => {
       <Tab.Screen name="Home" component={AudioStackNavigator} initialParams={{userName}}/>
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Feed" component={FeedAudioListingScreen} />
-      <Tab.Screen name="Library" component={LibraryScreen} />
+      <Tab.Screen name="Library" component={SearchScreen} />
     </Tab.Navigator>
   );
 };
