@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/AudioListingScreen";
-import SearchScreen from "../screens/AudioListingScreen";
+import SearchScreen from "../screens/SearchResultScreen";
 import FeedScreen from "../screens/AudioListingScreen";
 import LibraryScreen from "../screens/AudioListingScreen";
 import PlaylistDetailScreen from "../screens/PlaylistDetailScreen";
