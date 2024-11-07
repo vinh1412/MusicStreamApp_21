@@ -9,13 +9,12 @@ import {
   Dimensions,
 } from "react-native";
 const { width, height } = Dimensions.get("screen");
-const LaunchScreen = () => {
+const LaunchScreen = ({ navigation }) => {
   return (
     <ImageBackground
       source={require("../../assets/images/launchScreen/imageBackground.png")}
       style={styles.background}
     >
-    
       <View style={styles.container}>
         {/* Logo */}
         <Image
@@ -32,10 +31,16 @@ const LaunchScreen = () => {
         </View>
 
         {/* Buttons */}
-        <TouchableOpacity style={styles.createAccountButton}>
+        <TouchableOpacity
+          style={styles.createAccountButton}
+          onPress={() => navigation.navigate("SignUpScreen")}
+        >
           <Text style={styles.createAccountText}>Create an account</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.signInButton}>
+        <TouchableOpacity
+          style={styles.signInButton}
+          onPress={() => navigation.navigate("LoginScreen")}
+        >
           <Text style={styles.signInText}>I already have an account</Text>
         </TouchableOpacity>
       </View>
@@ -45,7 +50,6 @@ const LaunchScreen = () => {
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
     width: width,
     height: height,
   },
