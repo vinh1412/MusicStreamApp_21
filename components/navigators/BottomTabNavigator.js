@@ -8,6 +8,7 @@ import LibraryScreen from "../screens/AudioListingScreen";
 import MyLibraryScreen from "../screens/MyLibraryScreen";
 import PlaylistDetailScreen from "../screens/PlaylistDetailScreen";
 import ArtistProfileScreen from "../screens/ArtistProfileScreen";
+import MyPlaylistsScreen from "../screens/MyPlaylistsScreen";
 
 import { Image, Text } from "react-native";
 
@@ -87,7 +88,7 @@ const BottomTabNavigator = ({ route }) => {
             />
             <Tab.Screen name="Search" component={SearchScreen} />
             <Tab.Screen name="Feed" component={FeedAudioListingScreen} />
-            <Tab.Screen name="Library" component={MyLibraryScreen} />
+            <Tab.Screen name="Library" component={MyPlaylistsScreen} />
         </Tab.Navigator>
     );
 };
