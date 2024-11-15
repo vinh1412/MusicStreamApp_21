@@ -18,7 +18,7 @@ export default function App() {
             <Stack.Navigator>
                 <Stack.Screen
                     name="LaunchScreen"
-                    component={SubscriptionPlansScreen}
+                    component={LaunchScreen}
                     options={{
                         headerShown: false,
                     }}
