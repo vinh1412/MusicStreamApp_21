@@ -9,48 +9,51 @@ import LoginScreen from "../components/screens/LoginScreen.js";
 import SignUpScreen from "../components/screens/SignUpScreen.js";
 import LauchScreenPremium from "../components/screens/LauchScreenPremium.js";
 import SubscriptionPlansScreen from "../components/screens/SubscriptionPlansScreen.js";
+import { AudioProvider } from "../components/context/AudioContext.js";
 const Stack = createNativeStackNavigator();
 export default function App() {
-    return (
-        // <LaunchScreen />
-        <NavigationContainer independent={true}>
-            {/* //   <BottomTabNavigator /> */}
-            <Stack.Navigator>
-                <Stack.Screen
-                    name="LaunchScreen"
-                    component={LaunchScreen}
-                    options={{
-                        headerShown: false,
-                    }}
-                />
-                <Stack.Screen
-                    name="LoginScreen"
-                    component={LoginScreen}
-                    options={{
-                        headerShown: false,
-                    }}
-                />
-                <Stack.Screen
-                    name="SignUpScreen"
-                    component={SignUpScreen}
-                    options={{
-                        headerShown: false,
-                    }}
-                />
-                <Stack.Screen
-                    name="BottomTabNavigator"
-                    component={BottomTabNavigator}
-                    options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                    name="PlayAnAudioScreen"
-                    component={PlayAnAudioScreen}
-                    options={{
-                        headerShown: false,
-                        animation: "slide_from_bottom",
-                    }}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
-    );
+  return (
+    // <LaunchScreen />
+    <AudioProvider>
+      <NavigationContainer independent={true}>
+        {/* //   <BottomTabNavigator /> */}
+        <Stack.Navigator>
+          <Stack.Screen
+            name="LaunchScreen"
+            component={LaunchScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="SignUpScreen"
+            component={SignUpScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="BottomTabNavigator"
+            component={BottomTabNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="PlayAnAudioScreen"
+            component={PlayAnAudioScreen}
+            options={{
+              headerShown: false,
+              animation: "slide_from_bottom",
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AudioProvider>
+  );
 }
