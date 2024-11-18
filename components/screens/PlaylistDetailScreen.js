@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,65 +6,39 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
-  Dimensions
+  Dimensions,
 } from "react-native";
+import { listSongs } from "../../services/SongService";
+import { useAudio } from "../context/AudioContext";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon1 from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/Entypo";
 import Icon3 from "react-native-vector-icons/FontAwesome";
 import Icon4 from "react-native-vector-icons/Feather";
-const songs = [
-  {
-    id: "1",
-    title: "FLOWER",
-    artist: "Jessica Gonzalez",
-    plays: "2.1M",
-    duration: "03:36",
-    image: require("../../assets/images/playlistDetailScreen/songImage01.png"),
-  },
-  {
-    id: "2",
-    title: "Shape of You",
-    artist: "Anthony Taylor",
-    plays: "68M",
-    duration: "03:35",
-    image: require("../../assets/images/playlistDetailScreen/songImage02.png"),
-  },
-  {
-    id: "3",
-    title: "Blinding Lights",
-    artist: "Brian Bailey",
-    plays: "93M",
-    duration: "04:39",
-    image: require("../../assets/images/playlistDetailScreen/songImage03.png"),
-  },
-  {
-    id: "4",
-    title: "Levitating",
-    artist: "Anthony Taylor",
-    plays: "9M",
-    duration: "07:48",
-    image: require("../../assets/images/playlistDetailScreen/songImage04.png"),
-  },
-  {
-    id: "5",
-    title: "Astronaut in the Ocean",
-    artist: "Pedro Moreno",
-    plays: "23M",
-    duration: "03:36",
-    image: require("../../assets/images/playlistDetailScreen/songImage05.png"),
-  },
-  {
-    id: "6",
-    title: "Dynamite",
-    artist: "Elena Jimenez",
-    plays: "10M",
-    duration: "06:22",
-    image: require("../../assets/images/playlistDetailScreen/songImage06.png"),
-  },
-];
 
 export default function PlaylistDetailScreen({ navigation, route }) {
+  const [songs, setSongs] = useState([]);
+  const { playAudio } = useAudio();
+  // Read API
+  const readApi = () => {
+    listSongs()
+      .then((response) => {
+        setSongs(response.data);
+      })
+      .catch((error) => {
+        Alert.alert("Error", error.message);
+      });
+  };
+
+  useEffect(() => {
+    readApi();
+  }, []);
+
+  const handleSongPress = (song) => {
+    playAudio(song); // Phát bài hát mới
+    navigation.navigate("PlayAnAudioScreen", { song, songs }); // Chuyển sang màn hình phát nhạc
+  };
+
   return (
     <View style={styles.container}>
       {/* Header Section */}
@@ -121,39 +95,56 @@ export default function PlaylistDetailScreen({ navigation, route }) {
         data={songs}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.songItem}>
-            <Image source={item.image} />
-            <View style={styles.songInfo}>
-              <Text style={styles.songTitle}>{item.title}</Text>
-              <Text style={styles.songArtist}>{item.artist}</Text>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Icon4 name="play" size={12} color="#aaa" />
-                <Text style={styles.songStats}>{item.plays}</Text>
-                <Icon2 name="dot-single" size={20} color="#aaa" />
-                <Text style={styles.songStats}>{item.duration}</Text>
+          <TouchableOpacity
+            onPress={() => handleSongPress(item)}
+          >
+            <View style={styles.songItem}>
+              <Image source={{uri: item.image}} style={{width:60, height:60}} />
+              <View style={styles.songInfo}>
+                <Text style={styles.songTitle}>{item.name}</Text>
+                <Text style={styles.songArtist}>{item.artistName}</Text>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Icon4 name="play" size={12} color="#aaa" />
+                  <Text style={styles.songStats}>{item.plays}M</Text>
+                  <Icon2 name="dot-single" size={20} color="#aaa" />
+                  <Text style={styles.songStats}>{`${Math.floor(
+                    item.duration / 60
+                  )}:${String(Math.floor(item.duration % 60)).padStart(
+                    2,
+                    "0"
+                  )}`}</Text>
+                </View>
               </View>
+              <TouchableOpacity>
+                <Icon2 name="dots-three-horizontal" size={24} color="#000" />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <Icon2 name="dots-three-horizontal" size={24} color="#000" />
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         )}
       />
 
       {/* Now Playing Section */}
-      <TouchableOpacity style={styles.nowPlaying} onPress={() => navigation.navigate('PlayAnAudioScreen')}>
+      <TouchableOpacity
+        style={styles.nowPlaying}
+        onPress={() => navigation.navigate("PlayAnAudioScreen")}
+      >
         <Image
           source={require("../../assets/images/playlistDetailScreen/songImageActive.png")}
         />
         <View style={styles.nowPlayingInfo}>
           <Text style={styles.nowPlayingTitle}>FLOWER</Text>
-          <View style={{flexDirection:'row', alignItems:'center'}}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={styles.nowPlayingArtist}>Me</Text>
             <Icon2 name="dot-single" size={25} color="#fff" />
             <Text style={styles.nowPlayingArtist}>Jessica Gonzalez</Text>
           </View>
         </View>
-        <Icon1 name="hearto" size={20} color="#fff" style={{paddingHorizontal:30}} />
+        <Icon1
+          name="hearto"
+          size={20}
+          color="#fff"
+          style={{ paddingHorizontal: 30 }}
+        />
         <Icon4 name="play" size={20} color="#fff" />
       </TouchableOpacity>
     </View>
@@ -245,7 +236,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    width: '100%',
+    width: "100%",
     backgroundColor: "#000",
     paddingLeft: 20,
     paddingRight: 20,
