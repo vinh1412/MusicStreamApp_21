@@ -10,11 +10,13 @@ import SignUpScreen from "../components/screens/SignUpScreen.js";
 import LauchScreenPremium from "../components/screens/LauchScreenPremium.js";
 import SubscriptionPlansScreen from "../components/screens/SubscriptionPlansScreen.js";
 import { AudioProvider } from "../components/context/AudioContext.js";
+import FetchSongs from "../services/FetchSongs.js";
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     // <LaunchScreen />
     <AudioProvider>
+      <FetchSongs />
       <NavigationContainer independent={true}>
         {/* //   <BottomTabNavigator /> */}
         <Stack.Navigator>
