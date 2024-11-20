@@ -18,127 +18,38 @@ const { width, height } = Dimensions.get("screen");
 
 const PlayAnAudioScreen = ({ navigation, route }) => {
   const { song, songs } = route.params;
-  const [soundDuration, setSoundDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
   const {
-    currentSound,
-    setCurrentSound,
-    currentSong,
-    setCurrentSong,
+    playAudio,
+    pauseAudio,
     isPlaying,
-    setIsPlaying,
-  } = useAudio();
-  // Load song function
-  const loadSong = useCallback(async (newSong) => {
-    console.log('Current Song ID:', currentSong?.id);
-    console.log('New Song ID:', newSong?.id);
-    if (currentSong?.id === newSong.id) return; // Avoid reloading if the same song is selected
-
-    try {
-      if (currentSound) {
-        await currentSound.stopAsync(); // Stop previous song
-        await currentSound.unloadAsync(); // Unload previous song
-      }
-
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: newSong.file },
-        { shouldPlay: true }
-      );
-
-      setCurrentSound(newSound);
-      setCurrentSong(newSong);
-      setIsPlaying(true);
-
-      const status = await newSound.getStatusAsync();
-      setSoundDuration(status.durationMillis / 1000);
-      newSound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isPlaying) {
-          setCurrentTime(status.positionMillis / 1000);
-        }
-      });
-    } catch (error) {
-      console.error("Error loading sound", error);
-    }
-  }, [
-    currentSound,
     currentSong,
-    setCurrentSound,
-    setCurrentSong,
-    setIsPlaying,
-  ]);
-  // Play/Pause toggle function
-  const togglePlayback = useCallback(async () => {
-    if (!currentSound) return;
+    resumeAudio,
+    stopAudio,
+    currentPosition,
+    duration,
+    seekAudio,
+    handlePreviousSong,
+    handleNextSong,
+  } = useAudio();
 
-    if (isPlaying) {
-      await currentSound.pauseAsync();
-    } else {
-      await currentSound.playAsync();
-    }
-    setIsPlaying(!isPlaying);
-  }, [isPlaying, currentSound, setIsPlaying]);
-  // Skip back and forward functions
-  const playSkipBack10s = useCallback(async () => {
-    if (!currentSound) return;
-
-    const status = await currentSound.getStatusAsync();
-    const newPosition = Math.max(status.positionMillis - 10000, 0);
-    await currentSound.setPositionAsync(newPosition);
-  }, [currentSound]);
-  // Skip back and forward functions
-  const playSkipForward10s = useCallback(async () => {
-    if (!currentSound) return;
-
-    const status = await currentSound.getStatusAsync();
-    const newPosition = Math.min(
-      status.positionMillis + 10000,
-      status.durationMillis
-    );
-    await currentSound.setPositionAsync(newPosition);
-  }, [currentSound]);
-
-  // Skip back functions
-  const playSkipBack = useCallback(async () => {
-    console.log("Skipping back");
-    if (!currentSong) {
-      console.log("No current song");
-      return;
-    }
-
-    const currentIndex = songs.findIndex((item) => item.id === currentSong.id);
-    if (currentIndex === -1) {
-      console.log("Current song not found in list");
-      return;
-    }
-
-    if (currentIndex > 0) {
-      console.log("Loading previous song: ", songs[currentIndex - 1]);
-      loadSong(songs[currentIndex - 1]);
-    } else {
-      console.log("No previous song available");
-    }
-  }, [currentSong, songs, loadSong]);
-
-  // Skip forward functions
-  const playSkipForward = useCallback(async () => {
-    const currentIndex = songs.findIndex((item) => item.id === currentSong.id);
-    if (currentIndex < songs.length - 1) {
-      loadSong(songs[currentIndex + 1]);
-    }
-  }, [currentSong, songs, loadSong]);
-  // Stop sound when leaving screen
-  useEffect(() => {
-    if (currentSong?.id !== song.id) {
-      loadSong(song);
-    }
-
-    return () => {
-      if (currentSound) {
-        currentSound.stopAsync();
+  // Hàm xử lý sự kiện khi nhấn nút play/pause
+  const handlePlayPause = () => {
+    if (currentSong?.id === song.id) {
+      if (isPlaying) {
+        pauseAudio(); // Tạm dừng nếu bài hát hiện tại đang phát
+      } else {
+        resumeAudio(); // Tiếp tục phát nếu bài hát đang dừng
       }
-    };
-  }, [song, loadSong, currentSound, currentSong]);
-
+    } else {
+      playAudio(song); // Phát bài hát mới hoặc tiếp tục phát bài hát khác
+    }
+  };
+  // Hàm chuyển đổi thời gian từ mili giây sang định dạng mm:ss
+  const formatTime = (millis) => {
+    const minutes = Math.floor(millis / 60000);
+    const seconds = Math.floor((millis % 60000) / 1000);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
   return (
     <ImageBackground
       source={require("../../assets/images/playAnAudioScreen/brImage.png")}
@@ -167,18 +78,16 @@ const PlayAnAudioScreen = ({ navigation, route }) => {
       >
         {/* First content */}
         <View style={styles.content}>
-          <Text style={styles.title}>{song.name}</Text>
-          <Text style={styles.artist}>{song.artistName}</Text>
+          <Text style={styles.title}>{currentSong?.name}</Text>
+          <Text style={styles.artist}>{currentSong?.artistName}</Text>
 
           {/* Sound waves */}
           <Slider
             style={styles.slider}
             minimumValue={0}
-            maximumValue={soundDuration}
-            value={currentTime}
-            onSlidingComplete={async (value) => {
-              await currentSound.setPositionAsync(value * 1000);
-            }}
+            maximumValue={duration}
+            value={currentPosition}
+            onSlidingComplete={seekAudio}
             minimumTrackTintColor="#FFFFFF"
             maximumTrackTintColor="#000000"
             thumbTintColor="#FFFFFF"
@@ -186,15 +95,11 @@ const PlayAnAudioScreen = ({ navigation, route }) => {
 
           <View style={styles.timeMusic}>
             <Text style={styles.timeMusicTextStart}>
-              {Math.floor(currentTime / 60)}:
-              {String(Math.floor(currentTime % 60)).padStart(2, "0")}
+              {formatTime(currentPosition)}
             </Text>
 
             {/* Hiển thị thời gian còn lại */}
-            <Text style={styles.timeMusicTextEnd}>
-              {Math.floor(soundDuration / 60)}:
-              {String(Math.floor(soundDuration % 60)).padStart(2, "0")}
-            </Text>
+            <Text style={styles.timeMusicTextEnd}>{formatTime(duration)}</Text>
           </View>
           {/* Control music playback */}
           <View style={styles.controls}>
@@ -203,19 +108,23 @@ const PlayAnAudioScreen = ({ navigation, route }) => {
               <Icon name="shuffle" size={30} color="white" />
             </TouchableOpacity>
             {/* Button play skip back */}
-            <TouchableOpacity onPress={playSkipBack}>
+            <TouchableOpacity onPress={() => handlePreviousSong(navigation)}>
               <Icon name="play-skip-back" size={30} color="white" />
             </TouchableOpacity>
             {/* Button play/pause */}
-            <TouchableOpacity onPress={togglePlayback}>
+            <TouchableOpacity onPress={handlePlayPause}>
               <Icon
-                name={isPlaying ? "pause-circle" : "play-circle"}
+                name={
+                  isPlaying && currentSong?.id === song.id
+                    ? "pause-circle"
+                    : "play-circle"
+                }
                 size={50}
                 color="white"
               />
             </TouchableOpacity>
             {/* Button play skip forward */}
-            <TouchableOpacity onPress={playSkipForward}>
+            <TouchableOpacity onPress={() => handleNextSong(navigation)}>
               <Icon name="play-skip-forward" size={30} color="white" />
             </TouchableOpacity>
             {/* Button repeat song */}

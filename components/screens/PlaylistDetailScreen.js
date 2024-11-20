@@ -17,25 +17,11 @@ import Icon3 from "react-native-vector-icons/FontAwesome";
 import Icon4 from "react-native-vector-icons/Feather";
 
 export default function PlaylistDetailScreen({ navigation, route }) {
-  const [songs, setSongs] = useState([]);
-  const { playAudio } = useAudio();
-  // Read API
-  const readApi = () => {
-    listSongs()
-      .then((response) => {
-        setSongs(response.data);
-      })
-      .catch((error) => {
-        Alert.alert("Error", error.message);
-      });
-  };
-
-  useEffect(() => {
-    readApi();
-  }, []);
-
+  const [currentSong, setCurrentSong] = useState(null);
+  const {songs, playAudio } = useAudio();
   const handleSongPress = (song) => {
     playAudio(song); // Phát bài hát mới
+    setCurrentSong(song);
     navigation.navigate("PlayAnAudioScreen", { song, songs }); // Chuyển sang màn hình phát nhạc
   };
 
@@ -95,11 +81,12 @@ export default function PlaylistDetailScreen({ navigation, route }) {
         data={songs}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => handleSongPress(item)}
-          >
+          <TouchableOpacity onPress={() => handleSongPress(item)}>
             <View style={styles.songItem}>
-              <Image source={{uri: item.image}} style={{width:60, height:60}} />
+              <Image
+                source={{ uri: item.image }}
+                style={{ width: 60, height: 60 }}
+              />
               <View style={styles.songInfo}>
                 <Text style={styles.songTitle}>{item.name}</Text>
                 <Text style={styles.songArtist}>{item.artistName}</Text>
@@ -124,29 +111,34 @@ export default function PlaylistDetailScreen({ navigation, route }) {
       />
 
       {/* Now Playing Section */}
-      <TouchableOpacity
-        style={styles.nowPlaying}
-        onPress={() => navigation.navigate("PlayAnAudioScreen")}
-      >
-        <Image
-          source={require("../../assets/images/playlistDetailScreen/songImageActive.png")}
-        />
-        <View style={styles.nowPlayingInfo}>
-          <Text style={styles.nowPlayingTitle}>FLOWER</Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.nowPlayingArtist}>Me</Text>
-            <Icon2 name="dot-single" size={25} color="#fff" />
-            <Text style={styles.nowPlayingArtist}>Jessica Gonzalez</Text>
+      {currentSong && (
+        <TouchableOpacity
+          style={styles.nowPlaying}
+          onPress={() =>
+            navigation.navigate("PlayAnAudioScreen", { song: currentSong })
+          }
+        >
+          <Image
+            source={{ uri: currentSong.image }}
+            style={styles.nowPlayingImage}
+          />
+          <View style={styles.nowPlayingInfo}>
+            <Text style={styles.nowPlayingTitle}>{currentSong.name}</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={styles.nowPlayingArtist}>
+                {currentSong.artistName}
+              </Text>
+            </View>
           </View>
-        </View>
-        <Icon1
-          name="hearto"
-          size={20}
-          color="#fff"
-          style={{ paddingHorizontal: 30 }}
-        />
-        <Icon4 name="play" size={20} color="#fff" />
-      </TouchableOpacity>
+          <Icon1
+            name="hearto"
+            size={20}
+            color="#fff"
+            style={{ paddingHorizontal: 30 }}
+          />
+          <Icon4 name="play" size={20} color="#fff" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -242,8 +234,8 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   nowPlayingImage: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     borderRadius: 4,
   },
   nowPlayingInfo: {
