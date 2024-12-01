@@ -9,6 +9,7 @@ import LoginScreen from "../components/screens/LoginScreen.js";
 import SignUpScreen from "../components/screens/SignUpScreen.js";
 import LauchScreenPremium from "../components/screens/LauchScreenPremium.js";
 import SubscriptionPlansScreen from "../components/screens/SubscriptionPlansScreen.js";
+import GeminiChatBoxAi from "../components/screens/GeminiChatBoxAI.js";
 import { AudioProvider } from "../components/context/AudioContext.js";
 import FetchSongs from "../services/FetchSongs.js";
 const Stack = createNativeStackNavigator();
@@ -52,6 +53,14 @@ export default function App() {
             options={{
               headerShown: false,
               animation: "slide_from_bottom",
+            }}
+          />
+          <Stack.Screen
+            name="GeminiChatBoxAi"
+            component={GeminiChatBoxAi}
+            options={{
+              headerShown: false,
+              animation: "slide_from_right",
             }}
           />
         </Stack.Navigator>

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon1 from "react-native-vector-icons/Entypo";
+import Icon2 from "react-native-vector-icons/FontAwesome";
 const data = [
   {
     id: "1",
@@ -173,7 +174,7 @@ const data = [
   },
 ];
 
-const SearchResultScreen = () => {
+const SearchResultScreen = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState('All');
   // Lọc dữ liệu theo `searchQuery`
@@ -233,6 +234,13 @@ const SearchResultScreen = () => {
           </TouchableOpacity>
         )}
       />
+      {/* Fixed Chatbox Button */}
+      <TouchableOpacity
+        style={styles.chatButton}
+        onPress={() => navigation.navigate("GeminiChatBoxAi")}
+      >
+        <Icon2 name="comments" size={30} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -297,6 +305,16 @@ const styles = StyleSheet.create({
   trackViewAndTime: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  chatButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#000",
+    padding: 15,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
