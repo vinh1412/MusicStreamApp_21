@@ -12,6 +12,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/Entypo";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
+import Icon4 from "react-native-vector-icons/FontAwesome";
 
 const ArtistProfileScreen = ({navigation}) => {
   const [showFullText, setShowFullText] = useState(false);

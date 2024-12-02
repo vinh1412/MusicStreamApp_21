@@ -139,6 +139,13 @@ export default function PlaylistDetailScreen({ navigation, route }) {
           <Icon4 name="play" size={20} color="#fff" />
         </TouchableOpacity>
       )}
+      {/* Fixed Chatbox Button */}
+      <TouchableOpacity
+        style={styles.chatButton}
+        onPress={() => navigation.navigate("GeminiChatBoxAi")}
+      >
+        <Icon3 name="comments" size={30} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -250,5 +257,15 @@ const styles = StyleSheet.create({
   nowPlayingArtist: {
     fontSize: 14,
     color: "#fff",
+  },
+  chatButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#000",
+    padding: 15,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

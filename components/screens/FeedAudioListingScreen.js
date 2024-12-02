@@ -103,7 +103,7 @@ const data = [
     },
 ];
 
-const FeedAudioListingScreen = () => {
+const FeedAudioListingScreen = ({navigation}) => {
     const [posts, setPosts] = useState(data);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedComments, setSelectedComments] = useState([]);
@@ -496,6 +496,13 @@ const FeedAudioListingScreen = () => {
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
+            {/* Fixed Chatbox Button */}
+      <TouchableOpacity
+        style={styles.chatButton}
+        onPress={() => navigation.navigate("GeminiChatBoxAi")}
+      >
+        <Icon10 name="comments" size={30} color="#fff" />
+      </TouchableOpacity>
         </View>
     );
 };
@@ -601,6 +608,16 @@ const styles = StyleSheet.create({
         marginTop: 10,
         paddingVertical: 8,
     },
+    chatButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#000",
+    padding: 15,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 export default FeedAudioListingScreen;

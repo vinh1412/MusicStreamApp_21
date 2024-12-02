@@ -247,6 +247,13 @@ const AudioListingScreen = ({ navigation, route }) => {
           />
         </View>
       </ScrollView>
+      {/* Fixed Chatbox Button */}
+      <TouchableOpacity
+        style={styles.chatButton}
+        onPress={() => navigation.navigate("GeminiChatBoxAi")}
+      >
+        <Icon name="comments" size={30} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -429,6 +436,16 @@ const styles = StyleSheet.create({
   followButtonText: {
     color: "#fff",
     fontSize: 14,
+  },
+  chatButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#000",
+    padding: 15,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
