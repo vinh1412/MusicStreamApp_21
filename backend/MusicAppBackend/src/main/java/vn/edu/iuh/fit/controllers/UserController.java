@@ -8,10 +8,7 @@ package vn.edu.iuh.fit.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.services.UserService;
 
@@ -32,5 +29,10 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok().body(userService.getAllUsers());
+    }
+    @PostMapping
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        User createdUser = userService.addUser(user);
+        return ResponseEntity.ok().body(createdUser);
     }
 }
