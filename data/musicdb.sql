@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `artist` (
   `bio` varchar(50) DEFAULT NULL,
   `profile_picture` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`artist_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
 
 -- Dumping data for table music_app_db.artist: ~35 rows (approximately)
 INSERT INTO `artist` (`artist_id`, `artist_name`, `bio`, `profile_picture`) VALUES
@@ -94,42 +94,79 @@ INSERT INTO `artist` (`artist_id`, `artist_name`, `bio`, `profile_picture`) VALU
 	(34, 'Nguyen Khang', 'Nguyen Khang Bio', NULL),
 	(35, 'Hoa Minzy', 'Hoa Minzy Bio', NULL);
 
+-- Dumping structure for table music_app_db.audio_feed
+CREATE TABLE IF NOT EXISTS `audio_feed` (
+  `audio_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `date_posted` date DEFAULT NULL,
+  `plays` int(11) DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `likes` int(11) DEFAULT NULL,
+  `comment_count` int(11) DEFAULT NULL,
+  `song_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`audio_id`) USING BTREE,
+  KEY `FK_audio_feed_user` (`user_id`),
+  KEY `FK_audio_feed_song` (`song_id`),
+  CONSTRAINT `FK_audio_feed_song` FOREIGN KEY (`song_id`) REFERENCES `song` (`song_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK_audio_feed_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
+
+-- Dumping data for table music_app_db.audio_feed: ~10 rows (approximately)
+INSERT INTO `audio_feed` (`audio_id`, `user_id`, `title`, `date_posted`, `plays`, `duration`, `image`, `likes`, `comment_count`, `song_id`) VALUES
+	(1, 1, 'Song A', '2024-12-01', 100, 221, 'https://drive.google.com/uc?export=download&id=1_-IhPeVL2BZl6Sd_74CCrgcA5jR8R9WV', 50, 10, 1),
+	(2, 2, 'Song B', '2024-12-02', 150, 266, 'https://drive.google.com/file/d/1Ue2EBdIHW2-q_lM8SOuPZ6JNRzH05O2B/view?usp=sharing', 80, 15, 4),
+	(3, 3, 'Song C', '2024-12-03', 200, 286, 'https://drive.google.com/file/d/1UM6B2HwHSbf7Y7pmrNSjxCv9C3wuYGyO/view?usp=sharing', 120, 20, 8),
+	(4, 4, 'Song D', '2024-12-04', 50, 260, 'https://drive.google.com/file/d/1g25NAgnNC6PRWHo25g9TseL1Z-zKejTr/view?usp=sharing', 30, 5, 9),
+	(5, 5, 'Song E', '2024-12-05', 250, 192, 'https://drive.google.com/file/d/1LnkN4h9ggXEAsHPA-NIbjZomvKVMPKlt/view?usp=sharing', 200, 25, 10),
+	(6, 6, 'Song F', '2024-12-06', 120, 208, 'https://drive.google.com/file/d/1tOVY58pAU5A6AgkIkR7I8qCgAmvS-ZvQ/view?usp=sharing', 75, 12, 12),
+	(7, 7, 'Song G', '2024-12-07', 180, 332, 'https://drive.google.com/file/d/160iO0fMgdP3Q8cFr1yNvKToQTRwiu4J_/view?usp=sharing', 110, 18, 13),
+	(8, 8, 'Song H', '2024-12-08', 90, 315, 'https://drive.google.com/file/d/18BnpYCipafX6XK8IDWNUOdEdiF0zN7Pu/view?usp=sharing', 60, 8, 16),
+	(9, 9, 'Song I', '2024-12-09', 300, 250, 'https://example.com/images/song_i.jpg', 250, 30, 17),
+	(10, 10, 'Song J', '2024-12-10', 50, 211, 'https://drive.google.com/file/d/1IbKhVS7j06IYFWhqvyfMI61fwUVHXEKN/view?usp=sharing', 40, 6, 18);
+
 -- Dumping structure for table music_app_db.comment
 CREATE TABLE IF NOT EXISTS `comment` (
   `comment_id` int(11) NOT NULL AUTO_INCREMENT,
   `review` varchar(50) NOT NULL DEFAULT '0',
   `rate_at` datetime NOT NULL,
+  `like` int(11) NOT NULL DEFAULT 0,
+  `is_liked` int(11) NOT NULL DEFAULT 0,
   `user_id` int(11) NOT NULL DEFAULT 0,
   `song_id` int(11) NOT NULL DEFAULT 0,
+  `audio_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`comment_id`),
   KEY `FK_User_Comment` (`user_id`),
   KEY `FK_Song_Comment` (`song_id`),
+  KEY `FK_comment_audio_feed` (`audio_id`),
   CONSTRAINT `FK_Song_Comment` FOREIGN KEY (`song_id`) REFERENCES `song` (`song_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `FK_User_Comment` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `FK_User_Comment` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK_comment_audio_feed` FOREIGN KEY (`audio_id`) REFERENCES `audio_feed` (`audio_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
 
 -- Dumping data for table music_app_db.comment: ~20 rows (approximately)
-INSERT INTO `comment` (`comment_id`, `review`, `rate_at`, `user_id`, `song_id`) VALUES
-	(1, 'Great song!', '2024-11-20 10:00:00', 1, 1),
-	(2, 'Loved it!', '2024-11-21 10:00:00', 2, 2),
-	(3, 'Awesome!', '2024-11-22 10:00:00', 3, 3),
-	(4, 'So good!', '2024-11-23 10:00:00', 1, 1),
-	(5, 'Nice!', '2024-11-24 10:00:00', 2, 2),
-	(6, 'Perfect!', '2024-11-25 10:00:00', 2, 3),
-	(7, 'Fantastic!', '2024-11-26 10:00:00', 2, 1),
-	(8, 'Amazing!', '2024-11-27 10:00:00', 2, 2),
-	(9, 'Wonderful!', '2024-11-28 10:00:00', 2, 3),
-	(10, 'Superb!', '2024-11-29 10:00:00', 2, 1),
-	(11, 'Excellent!', '2024-12-01 12:00:00', 3, 5),
-	(12, 'Super cool!', '2024-12-02 12:00:00', 4, 6),
-	(13, 'Great job!', '2024-12-03 12:00:00', 5, 7),
-	(14, 'Loved it!', '2024-12-04 12:00:00', 6, 8),
-	(15, 'Marvelous!', '2024-12-05 12:00:00', 7, 9),
-	(16, 'Nice one!', '2024-12-06 12:00:00', 8, 10),
-	(17, 'Fantastic!', '2024-12-07 12:00:00', 9, 11),
-	(18, 'Wonderful!', '2024-12-08 12:00:00', 10, 12),
-	(19, 'Brilliant!', '2024-12-09 12:00:00', 10, 13),
-	(20, 'Amazing!', '2024-12-10 12:00:00', 10, 14);
+INSERT INTO `comment` (`comment_id`, `review`, `rate_at`, `like`, `is_liked`, `user_id`, `song_id`, `audio_id`) VALUES
+	(1, 'Great song!', '2024-11-20 10:00:00', 10, 0, 1, 1, 1),
+	(2, 'Loved it!', '2024-11-21 10:00:00', 20, 0, 2, 2, 2),
+	(3, 'Awesome!', '2024-11-22 10:00:00', 30, 0, 3, 3, 3),
+	(4, 'So good!', '2024-11-23 10:00:00', 40, 0, 1, 1, 1),
+	(5, 'Nice!', '2024-11-24 10:00:00', 50, 0, 2, 2, 3),
+	(6, 'Perfect!', '2024-11-25 10:00:00', 60, 0, 2, 3, 5),
+	(7, 'Fantastic!', '2024-11-26 10:00:00', 70, 0, 2, 1, 4),
+	(8, 'Amazing!', '2024-11-27 10:00:00', 80, 0, 2, 2, 7),
+	(9, 'Wonderful!', '2024-11-28 10:00:00', 90, 0, 2, 3, 6),
+	(10, 'Superb!', '2024-11-29 10:00:00', 100, 0, 2, 1, 8),
+	(11, 'Excellent!', '2024-12-01 12:00:00', 110, 0, 3, 5, 9),
+	(12, 'Super cool!', '2024-12-02 12:00:00', 120, 0, 4, 6, 10),
+	(13, 'Great job!', '2024-12-03 12:00:00', 130, 0, 5, 7, 4),
+	(14, 'Loved it!', '2024-12-04 12:00:00', 66, 0, 6, 8, 2),
+	(15, 'Marvelous!', '2024-12-05 12:00:00', 22, 0, 7, 9, 1),
+	(16, 'Nice one!', '2024-12-06 12:00:00', 14, 0, 8, 10, 3),
+	(17, 'Fantastic!', '2024-12-07 12:00:00', 2, 0, 9, 11, 7),
+	(18, 'Wonderful!', '2024-12-08 12:00:00', 8, 0, 10, 12, 8),
+	(19, 'Brilliant!', '2024-12-09 12:00:00', 8, 0, 10, 13, 7),
+	(20, 'Amazing!', '2024-12-10 12:00:00', 7, 0, 10, 14, 10);
 
 -- Dumping structure for table music_app_db.genre
 CREATE TABLE IF NOT EXISTS `genre` (
@@ -169,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `playlist` (
   PRIMARY KEY (`playlist_id`),
   KEY `FK_User_PlayList` (`user_id`),
   CONSTRAINT `FK_User_PlayList` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
 
 -- Dumping data for table music_app_db.playlist: ~10 rows (approximately)
 INSERT INTO `playlist` (`playlist_id`, `title`, `create_at`, `description`, `user_id`) VALUES
