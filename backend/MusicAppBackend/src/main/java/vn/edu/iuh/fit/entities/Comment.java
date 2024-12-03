@@ -25,6 +25,14 @@ public class Comment {
     @Column(name = "rate_at", nullable = false)
     private Instant rateAt;
 
+    @ColumnDefault("0")
+    @Column(name = "`like`", nullable = false)
+    private Integer like;
+
+    @ColumnDefault("0")
+    @Column(name = "is_liked", nullable = false)
+    private Integer isLiked;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ColumnDefault("0")
@@ -36,5 +44,10 @@ public class Comment {
     @ColumnDefault("0")
     @JoinColumn(name = "song_id", nullable = false)
     private Song song;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "audio_id")
+    private AudioFeed audio;
 
 }

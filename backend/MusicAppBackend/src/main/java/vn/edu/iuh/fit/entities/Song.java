@@ -10,15 +10,13 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "song")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Song implements Serializable {
+public class Song {
     @Id
     @Column(name = "song_id", nullable = false)
     private Integer id;
@@ -32,7 +30,6 @@ public class Song implements Serializable {
 
     @Column(name = "release_date")
     private LocalDate releaseDate;
-
 
     @Column(name = "file_path")
     private String filePath;
@@ -60,4 +57,5 @@ public class Song implements Serializable {
 
     @Column(name = "image")
     private String image;
+
 }
