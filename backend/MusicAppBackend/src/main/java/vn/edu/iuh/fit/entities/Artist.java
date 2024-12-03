@@ -24,5 +24,5 @@ public class Artist {
 
     @Column(name = "profile_picture")
     private String profilePicture;
-
+    private Integer follower;
 }

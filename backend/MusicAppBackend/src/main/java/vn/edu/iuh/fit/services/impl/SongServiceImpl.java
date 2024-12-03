@@ -47,4 +47,9 @@ public class SongServiceImpl implements SongService {
     public Song getSongById(Integer id) {
         return songRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public List<Song> findByTitleContainingIgnoreCase(String title) {
+        return songRepository.findByTitleContainingIgnoreCase(title);
+    }
 }

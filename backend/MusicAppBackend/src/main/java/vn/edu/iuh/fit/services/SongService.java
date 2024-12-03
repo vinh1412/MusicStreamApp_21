@@ -20,4 +20,5 @@ import java.util.List;
 public interface SongService {
     List<SongDTO> getAllSongs();
     Song getSongById(Integer id);
+    List<Song> findByTitleContainingIgnoreCase(String title);
 }

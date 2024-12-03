@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import jakarta.persistence.*;
@@ -36,19 +37,22 @@ public class Song implements Serializable {
     @Column(name = "file_path")
     private String filePath;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.EAGER)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "artist_id")
+    @JsonIgnore
     private Artist artist;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.EAGER)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "album_id")
+    @JsonIgnore
     private Album album;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.EAGER)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "genre_id")
+    @JsonIgnore
     private Genre genre;
 
     @Column(name = "plays")

@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.Album;
 
+import java.util.List;
+
 /*
  * @description:
  * @author: Tran Hien Vinh
@@ -18,4 +20,5 @@ import vn.edu.iuh.fit.entities.Album;
  */
 @Repository
 public interface AlbumRepository extends JpaRepository<Album, Integer> {
+    List<Album> findByTitleContainingIgnoreCase(String title);
 }

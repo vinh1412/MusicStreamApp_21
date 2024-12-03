@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.Artist;
 
+import java.util.List;
+
 /*
  * @description:
  * @author: Tran Hien Vinh
@@ -18,4 +20,5 @@ import vn.edu.iuh.fit.entities.Artist;
  */
 @Repository
 public interface ArtistRepository extends JpaRepository<Artist, Integer> {
+    List<Artist> findByArtistNameContainingIgnoreCase(String artistName);
 }

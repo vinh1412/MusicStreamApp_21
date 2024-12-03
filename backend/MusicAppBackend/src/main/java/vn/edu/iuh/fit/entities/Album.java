@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,9 +27,10 @@ public class Album {
     @Column(name = "cover_image")
     private String coverImage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.EAGER)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "artist_id")
+    @JsonIgnore
     private Artist artist;
 
 }

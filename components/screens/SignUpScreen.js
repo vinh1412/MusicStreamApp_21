@@ -9,11 +9,14 @@ import {
   ImageBackground,
   Dimensions,
 } from "react-native";
+import axios from "axios";
 import Icon from "react-native-vector-icons/Fontisto";
 import Icon1 from "react-native-vector-icons/Feather";
 const { width, height } = Dimensions.get("screen");
+const REST_API_URL = "http://192.168.1.31:8080/api/users";
+import { listUsers } from "../../services/UserService";
 const SignUpScreen = ({ navigation }) => {
-  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,35 +29,37 @@ const SignUpScreen = ({ navigation }) => {
     setRePasswordVisible(!isRePasswordVisible);
   };
   const [users, setUsers] = useState([]);
-  const readApi = async () => {
-    const response = await fetch(
-      "https://6711cec24eca2acdb5f5d0cb.mockapi.io/api/users"
-    );
-    const data = await response.json();
-    setUsers(data);
+  // Read API
+  const readApi = () => {
+    listUsers()
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        Alert.alert("Error", error.message);
+      });
   };
   useEffect(() => {
     readApi();
   }, []);
   const addUsers = async () => {
-    const response = await fetch(
-      "https://6711cec24eca2acdb5f5d0cb.mockapi.io/api/users",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      }
-    );
-    const data = await response.json();
-    setUsers([...users, data]);
-    readApi();
+    try {
+      const response = await axios.post(REST_API_URL, {
+        userName,
+        email,
+        password,
+      });
+      setUsers([...users, response.data]);
+      readApi(); // Refresh user list
+    } catch (error) {
+      Alert.alert("Error", "Failed to register user");
+      console.error(error);
+    }
   };
   // Handle register
   const handleRegister = () => {
     // Kiểm tra các trường hợp nhập liệu
-    if (!name || !email || !password || !confirmPassword) {
+    if (!userName || !email || !password || !confirmPassword) {
       Alert.alert("Notification", "Please fill in all information");
       return;
     }
@@ -67,7 +72,7 @@ const SignUpScreen = ({ navigation }) => {
       return;
     }
     addUsers();
-    setName("");
+    setUserName("");
     setEmail("");
     setPassword("");
     setConfirmPassword("");
@@ -96,9 +101,9 @@ const SignUpScreen = ({ navigation }) => {
             />
             <TextInput
               style={styles.inputEmail}
-              placeholder="Name"
-              value={name}
-              onChangeText={setName}
+              placeholder="Username"
+              value={userName}
+              onChangeText={setUserName}
             />
           </View>
           <View style={styles.inputView}>
